@@ -15,7 +15,7 @@ function WrapperProfile2D = WrapPipe(ProfileFile, PipeRadius, TurnsPerMeter, Ove
 
 
 % READING PIPE CENTERLINE
-% Expectated contents of file:
+% Expected contents of file:
 % Three columns called 'x', 'y' and 'z' with coordinates of points along pipe centerline
 Table = readtable(ProfileFile); % Read file contents
 xin = Table.x';                 % Row vetor of x-coordinates
