@@ -10,6 +10,14 @@ function pipeline = GenPipeline(outputfile, cornersx, cornersy, cornersz, bendra
 
 numbends = length(cornersx) - 2;                       % Number of bends is 2 less than number of points (all points are bends except first and last)
 
+if ~isequal(length(cornersx), length(cornersy), length(cornersz))
+    error('Inconsistent number of coordinates')
+end
+
+if length(bendradii) ~= numbends
+    error('Incorrect number of bend radii specified')
+end
+
 corners = [cornersx; cornersy; cornersz];              % Each column is an input point
 
 pipeline = [cornersx(1); cornersy(1); cornersz(1)];    % This will store the output. Each column will be a point. Currently only contains the first point, which will be unchanged.
@@ -24,7 +32,7 @@ for i = 1:numbends                                     % For each bend
     newDirection = (corners(:, i+2) - corners(:, i+1))/norm(corners(:, i+2) - corners(:, i+1));
     % Corner angle (if there was no bend) is the inverse cosine of the dot
     % product of the unit vectors
-    cornerangle = acos(abs(dot(newDirection, oldDirection)));
+    cornerangle = acos(-(dot(newDirection, oldDirection)));
     % The angle through which an arc will be drawn. Equal to pi-cornerangle
     % for geometry reasons
     bendAngle = pi-cornerangle;
@@ -65,6 +73,7 @@ title('Rounded');
 axis equal
 
 % WRITE OUTPUT DATA PIPE LINE POINTS
-writematrix(pipeline', outputfile, 'Range', 'A2')
+Table = array2table(pipeline', 'VariableNames', ["x", "y", "z"]);
+writetable(Table, outputfile)
 
 end
