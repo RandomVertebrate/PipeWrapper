@@ -199,7 +199,7 @@ dottedline = zeros(2, npts-ijump);            % This will hold the dotted line
 for i = 1:npts-ijump
     % Each point of the dotted line is distance Overlap away from the
     % second line in the "ladder rung" direction.
-    dottedline(:, i) = line1_2d(:, i) + Overlap*(line1_2d(:, i) - line2_2d(:, i))/norm(line1_2d(:, i) - line2_2d(:, i));
+    dottedline(:, i) = line2_2d(:, i) + Overlap*(line2_2d(:, i) - line1_2d(:, i))/norm(line2_2d(:, i) - line1_2d(:, i));
 end
 
 % SETTING RETURN TABLE
