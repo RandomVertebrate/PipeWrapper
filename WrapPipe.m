@@ -35,7 +35,7 @@ line = linein(:, 1);        % Generated interpolation will be stored here. The s
 % the partition'th point is currently being processed)
 partition = 1;
 % This loop goes through the input data, generates evenly spaced points, and adds them to the output data.
-while norm(linein(:, end) - line(:, end)) > Spacing        % Keep going until the last generated point is within Spacing distance of the last input point
+while norm(linein(:, end) - line(:, end)) > Spacing           % Keep going until the last generated point is within Spacing distance of the last input point
     for j = partition:maxpts                                  % Iterate through the unprocessed input data
         % If this point were added as-is to the generated data, that would
         % correspond to a length increment of
@@ -56,7 +56,7 @@ while norm(linein(:, end) - line(:, end)) > Spacing        % Keep going until th
     end
 end
 
-angrate = TurnsPerMeter*2*pi*Spacing;        % Converting wrap rate to radians per point
+angrate = TurnsPerMeter*2*pi*Spacing;           % Converting wrap rate to radians per point
 
 ijump = round(2*pi/angrate);                    % Index difference between subsequent wraps
 
@@ -90,7 +90,7 @@ for i = 2:npts-1
     rotax = cross(directions(:, i-1), directions(:, i));
     if norm(rotax) == 0
         % If the cross product is zero, there is no change in direction and the
-        % non-parallel vector neednot be changed.
+        % non-parallel vector need not be changed.
         nonParallel(:, i) = nonParallel(:, i-1);
     else
         rotax = rotax/norm(rotax);          % Normalizing, just in case
@@ -106,7 +106,7 @@ offsets = zeros(3, npts);                       % This will store offset vectors
 % Iterating through centerline points and generating offsets to the helix
 for i = 1:npts                                                       % For each point,
     % Creating a vector perpendicular to the pipe centerline
-    refvec = cross(directions(:, i), nonParallel(:, i));                % The vector that will be rotated will be perpendicular to the pipe centerline at that point.
+    refvec = cross(directions(:, i), nonParallel(:, i));             % The vector that will be rotated will be perpendicular to the pipe centerline at that point.
     rotang = (i-1)*angrate;                                          % The angle it will be rotated by is the rotation per index times the index
     rotax = directions(:, i);                                        % The axis of rotation is the pipe centerline direction
     % Now rotating the vector (applying the 'twist')
