@@ -1,7 +1,12 @@
-function WrapperProfile2D = WrapPipe(ProfileFile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector)
+function WrapperProfile2D = WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector)
 
-% ProfileFile is the neame of a file that contains 'x', 'y', and 'z'
-% columns containing coordinates defining the centerline of the pipe.
+% Profile is either:
+%     The name of an excel file that contains 'x', 'y', and 'z'
+%     columns containing coordinates defining the centerline of the pipe.
+% OR
+%     a table with fields 'x', 'y', and 'z'
+% OR
+%     a matrix [x(:); y(:); z(:)]
 % PipeRadius is the radius of the pipe in meters.
 % TurnsPerMeter is the number of turns of wrapping per meter of pipe.
 % Overlap is the overlap between successive wraps/turns. A dashed line is
@@ -15,15 +20,31 @@ function WrapperProfile2D = WrapPipe(ProfileFile, PipeRadius, TurnsPerMeter, Ove
 % the pipe's starting point.
 
 % READING PIPE CENTERLINE
-% Expected contents of file:
-% Three columns called 'x', 'y' and 'z' with coordinates of points along pipe centerline
-Table = readtable(ProfileFile); % Read file contents
-xin = Table.x';                 % Row vetor of x-coordinates
-yin = Table.y';                 % Row vetor of y-coordinates
-zin = Table.z';                 % Row vetor of z-coordinates
-maxpts = length(xin);           % Number of points read
-
-linein = [xin; yin; zin];       % Data read from file. Each column is a point [x; y; z]
+% If input is a filename
+if class(Profile) == "char" | class(Profile) == "string"
+    % Expected contents of file:
+    % Three columns called 'x', 'y' and 'z' with coordinates of points along pipe centerline
+    Table = readtable(Profile); % Read file contents
+    xin = Table.x';                 % Row vetor of x-coordinates
+    yin = Table.y';                 % Row vector of y-coordinates
+    zin = Table.z';                 % Row vector of z-coordinates
+    maxpts = length(xin);           % Number of points read
+    linein = [xin; yin; zin];       % Data read from file. Each column is a point [x; y; z]
+% If input is a matrix
+elseif class(Profile) == "double"
+    ncnr = size(Profile);
+    if ncnr(1) ~= 3
+        error("Incorrect input dimensions for pipe profile")
+    end
+    linein = Profile;
+    maxpts = length(Profile(1, :));
+elseif class(Profile) == "table"
+    xin = Profile.x';               % Row vetor of x-coordinates
+    yin = Profile.y';               % Row vector of y-coordinates
+    zin = Profile.z';               % Row vector of z-coordinates
+    maxpts = length(xin);           % Number of points read
+    linein = [xin; yin; zin];       % Data read from file. Each column is a point [x; y; z]
+end
 
 % GENERATING EVENLY SPACED INTERPOLATION OF PIPE CENTERLINE
 % We need the centerline to consist of (physically) evenly spaced points so
