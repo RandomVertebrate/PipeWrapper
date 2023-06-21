@@ -29,21 +29,22 @@ if class(Profile) == "char" | class(Profile) == "string"
     yin = Table.y';                 % Row vector of y-coordinates
     zin = Table.z';                 % Row vector of z-coordinates
     maxpts = length(xin);           % Number of points read
-    linein = [xin; yin; zin];       % Data read from file. Each column is a point [x; y; z]
+    linein = [xin; yin; zin];       % Input data. Each column is a point [x; y; z]
 % If input is a matrix
 elseif class(Profile) == "double"
     ncnr = size(Profile);
     if ncnr(1) ~= 3
         error("Incorrect input dimensions for pipe profile")
     end
-    linein = Profile;
+    linein = Profile;               % Input is already in the correct format
     maxpts = length(Profile(1, :));
+% If input is a table
 elseif class(Profile) == "table"
     xin = Profile.x';               % Row vetor of x-coordinates
     yin = Profile.y';               % Row vector of y-coordinates
     zin = Profile.z';               % Row vector of z-coordinates
-    maxpts = length(xin);           % Number of points read
-    linein = [xin; yin; zin];       % Data read from file. Each column is a point [x; y; z]
+    maxpts = length(xin);           % Number of points
+    linein = [xin; yin; zin];       % Input data. Each column is a point [x; y; z]
 end
 
 % GENERATING EVENLY SPACED INTERPOLATION OF PIPE CENTERLINE
