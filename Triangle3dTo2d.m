@@ -7,7 +7,7 @@ function C2d = Triangle3dTo2d(A3d, B3d, C3d, A2d, B2d)
 BaseVec3d = B3d - A3d;                                         % 3D vector AB
 BaseDir3d = BaseVec3d/norm(BaseVec3d);                         % Direction of 3D AB
 BasePt3d = A3d + BaseDir3d*dot((C3d - A3d), BaseDir3d);        % Foot of perpendicular line dropped from C onto AB
-height = norm(C3d - BasePt3d);                                 % Foot of perpendicular line
+height = norm(C3d - BasePt3d);                                 % Height of perpendicular line
 footdist = norm(BasePt3d - A3d);                               % Distance of foot from A
 
 % Defining the 2D points in 3D space
