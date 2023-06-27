@@ -6,3 +6,5 @@ A straight strip of material (e.g. tape) can be wrapped helically around a strai
 This is not the case for pipes with bends.
 
 This calculates a shape of strip that can be wrapped around a given pipe with arbitrary bends.
+
+MATLAB code and a dumb-translated Python version with a matplotlib "GUI"
