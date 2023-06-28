@@ -31,11 +31,23 @@ tableax.set_title("Pipe Centerline Data")
 tableax.axis("off")
 tableax.table(transpose([[None],[None],[None], [None]]), colLabels = ["x", "y", "z", "Bend Radius"], loc = "center")
 
+ax3d = fig1.add_subplot(2, 2, 3, projection = "3d")
+ax2d = fig1.add_subplot(2, 2, 4)
+ax3d.set_title("Wrapped Pipe")
+ax2d.set_title("Wrapper")
+
 def generate(event):
     if len(cornersx) < 2:
         return
     Profile = GenPipeline(cornersx, cornersy, cornersz, bendradii, bendpoints)
-    WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector, OutputFile, fig1)
+    WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector, OutputFile, ax2d, ax3d)
+    return
+
+def generate_newfig(event):
+    if len(cornersx) < 2:
+        return
+    Profile = GenPipeline(cornersx, cornersy, cornersz, bendradii, bendpoints)
+    WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector, OutputFile)
     return
 
 def updatetable():
@@ -189,9 +201,13 @@ delbtnax = fig1.add_subplot(20, 4, 36)
 delbtn = Button(delbtnax, "Delete Point")
 delbtn.on_clicked(delpt)
 
-genbtnax = fig1.add_subplot(20, 2, 17)
-genbtn = Button(genbtnax, "GENERATE")
+genbtnax = fig1.add_subplot(20, 4, 33)
+genbtn = Button(genbtnax, "GEN")
 genbtn.on_clicked(generate)
+
+gennewbtnax = fig1.add_subplot(20, 4, 34)
+gennewbtn = Button(gennewbtnax, "GEN (New Fig)")
+gennewbtn.on_clicked(generate_newfig)
 
 plt.subplots_adjust(hspace = 0.3)
 plt.show()

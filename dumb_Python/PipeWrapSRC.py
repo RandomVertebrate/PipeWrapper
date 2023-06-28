@@ -110,7 +110,7 @@ def GenPipeline(cornersx, cornersy, cornersz, bendradii, bendpoints, showplot = 
 
     return pipeline
 
-def WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector, OutputFile = None, fig = None):
+def WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle, RefVector, OutputFile = None, ax2d = None, ax3d = None):
 
     linein = Profile
 
@@ -171,22 +171,25 @@ def WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle,
     
     seam = line + offsets
 
-    if fig == None:
-        fig = plt.figure()
-    
-    ax1 = fig.add_subplot(2, 2, 3, projection = "3d")
-    ax1.clear()
-    ax1.plot(line[0, :], line[1, :], line[2, :], 'g', linewidth = 2)
-    ax1.plot(seam[0, :], seam[1, :], seam[2, :], 'r', linewidth = 0.7)
+    new_window_3d = False
+    if ax3d == None:
+        ax3d = plt.figure().add_subplot(projection = "3d")
+        new_window_3d = True
+
+    ax3d.clear()
+    ax3d.plot(line[0, :], line[1, :], line[2, :], 'g', linewidth = 2)
+    ax3d.plot(seam[0, :], seam[1, :], seam[2, :], 'r', linewidth = 0.7)
     
     for i in range(npts-ijump):
-        ax1.plot([seam[0, i], seam[0, i+ijump]], [seam[1, i], seam[1, i+ijump]], [seam[2, i], seam[2, i+ijump]], 'k', linewidth = 0.2)
+        ax3d.plot([seam[0, i], seam[0, i+ijump]], [seam[1, i], seam[1, i+ijump]], [seam[2, i], seam[2, i+ijump]], 'k', linewidth = 0.2)
     
-    plt.title("Wrapped Pipe")
+    ax3d.set_title("Wrapped Pipe")
     
-    ax1.set_box_aspect([1, 1, 1])
-    set_axes_equal(ax1)
-    plt.show(block = False)
+    ax3d.set_box_aspect([1, 1, 1])
+    set_axes_equal(ax3d)
+
+    if new_window_3d:
+        plt.show(block = False)
 
     line1_3d = seam[:, 0:npts-ijump]
     line2_3d = seam[:, ijump:npts]
@@ -232,12 +235,16 @@ def WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle,
     
     for i in range(npts-ijump):
         dottedline[:, i] = line2_2d[:, i] + Overlap*(line2_2d[:, i] - line1_2d[:, i])/norm(line2_2d[:, i] - line1_2d[:, i])
+
+    new_window_2d = False
+    if ax2d == None:
+        ax2d = plt.figure().add_subplot()
+        new_window_2d = True
     
-    ax2 = fig.add_subplot(2, 2, 4)
-    ax2.clear()
-    ax2.plot(line1_2d[0, :], line1_2d[1,:], 'k', linewidth = 0.5)
-    ax2.plot(line2_2d[0, :], line2_2d[1,:], 'k', linewidth = 0.5)
-    ax2.plot(dottedline[0, :], dottedline[1, :], 'k--', linewidth = 0.5)
+    ax2d.clear()
+    ax2d.plot(line1_2d[0, :], line1_2d[1,:], 'k', linewidth = 0.5)
+    ax2d.plot(line2_2d[0, :], line2_2d[1,:], 'k', linewidth = 0.5)
+    ax2d.plot(dottedline[0, :], dottedline[1, :], 'k--', linewidth = 0.5)
     
     numturns = int(ceil(npts/ijump))
 
@@ -245,17 +252,19 @@ def WrapPipe(Profile, PipeRadius, TurnsPerMeter, Overlap, Resolution, PlotAngle,
         idx = i*ijump
         pt1 = line1_2d[:, idx]
         pt2 = line2_2d[:, idx]
-        ax2.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'k', linewidth = 0.5)
+        ax2d.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'k', linewidth = 0.5)
     
     pt1 = line1_2d[:, -1]
     pt2 = line2_2d[:, -1]
-    ax2.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'k', linewidth = 0.5)
+    ax2d.plot([pt1[0], pt2[0]], [pt1[1], pt2[1]], 'k', linewidth = 0.5)
     
-    ax2.set_aspect("equal")
-    plt.title("Wrapper")
-    plt.show(block = False)
+    ax2d.set_aspect("equal")
+    ax2d.set_title("Wrapper")
 
-    if not OutputFile == None:
+    if new_window_2d:
+        plt.show(block = False)
+
+    if OutputFile != None and OutputFile != "":
         df = pd.DataFrame(transpose([line1_2d[0, :], line1_2d[1, :], line2_2d[0, :], line2_2d[1, :], dottedline[0, :], dottedline[1, :]]))
         df.to_excel(OutputFile, header = ["line 1 x", "line 1 y", "line 2 x", "line 2 y", "dotted line x", "dotted line y"], index = False)
         
