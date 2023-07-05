@@ -16,7 +16,7 @@ TurnsPerMeter = 1
 Overlap = 1
 Resolution = 100
 PlotAngle = 0
-RefVector = [0, 0, 1]
+RefVector = [1, 1, 1]
 OutputFile = "Wrapper_output.xlsx"
 bendpoints = 100
 
