@@ -9,6 +9,10 @@ This calculates a shape of strip that can be wrapped around a given pipe with ar
 
 MATLAB code and a dumb-translated Python version with a matplotlib "GUI"
 
-## Sample Output
+## Examples
 
-[Sample_Output-1.pdf](https://github.com/RandomVertebrate/PipeWrapper/files/12144361/Sample_Output-1.pdf)
+![Sample_Output-1-3](https://github.com/RandomVertebrate/PipeWrapper/assets/54997017/41087ec5-6a20-4022-be2c-905899ffcd04)
+
+![Sample_Output-1-1](https://github.com/RandomVertebrate/PipeWrapper/assets/54997017/7e1b1ada-48c6-4223-bee3-8ad287d2b50b)
+
+![Sample_Output-1-2](https://github.com/RandomVertebrate/PipeWrapper/assets/54997017/5918e3da-c921-4148-83d0-e6aa93ef6077)
